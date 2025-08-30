@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time-Locked Wallet</title>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .wallet-status {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .status.success { background: rgba(76, 175, 80, 0.3); }
+        .status.error { background: rgba(244, 67, 54, 0.3); }
+        .status.info { background: rgba(33, 150, 243, 0.3); }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="container">
+            <h1 style="text-align: center; margin-bottom: 30px; font-size: 32px;">
+                Time-Locked Wallet
+            </h1>
+            
+            <div id="wallet-section">
+                <div style="text-align: center;">
+                    <button onclick="connectWallet()">Connect Phantom Wallet</button>
+                </div>
+            </div>
+
+            <div id="app-section" style="display: none;">
+                <div class="wallet-status">
+                    <h3>Wallet Connected</h3>
+                    <p id="wallet-address" style="font-size: 12px; opacity: 0.8; word-break: break-all;"></p>
+                </div>
+
+                <div id="create-lock-section" class="wallet-status">
+                    <h3>Create Time Lock</h3>
+                    <div class="form-group">
+                        <label>Amount (SOL)</label>
+                        <input type="number" step="0.01" id="amount" placeholder="e.g., 0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Unlock Date & Time</label>
+                        <input type="datetime-local" id="unlock-date">
+                    </div>
+                    <button onclick="createLock()" id="create-btn">Lock Funds</button>
+                </div>
+
+                <div id="existing-lock-section" style="display: none;" class="wallet-status">
+                    <h3>Active Time Lock</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value" id="locked-amount">-</div>
+                            <div class="stat-label">SOL Locked</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="unlock-date-display">-</div>
+                            <div class="stat-label">Unlock Date</div>
+                        </div>
+                    </div>
+                    <div class="countdown" id="countdown">-</div>
+                    <button onclick="withdraw()" id="withdraw-btn" disabled>Funds Locked</button>
+                </div>
+
+                <div id="status" class="status info" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let wallet = null;
+        let lockData = null;
+        let connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
+        const PROGRAM_ID = new solanaWeb3.PublicKey("HXcY4HjwkR1RDsWXNZLJFa8YUYVwryaMY2J8faT6UUtU");
+
+        // Utility functions
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+        }
+
+        function createUint8Array(data) {
+            return new Uint8Array(data);
+        }
+
+        // Connect wallet
+        async function connectWallet() {
+            try {
+                if (window.solana && window.solana.isPhantom) {
+                    const response = await window.solana.connect();
+                    wallet = response.publicKey;
+                    
+                    document.getElementById('wallet-address').textContent = wallet.toString();
+                    document.getElementById('wallet-section').style.display = 'none';
+                    document.getElementById('app-section').style.display = 'block';
+                    
+                    showStatus('Wallet connected!', 'success');
+                    await checkExistingLock();
+                } else {
+                    showStatus('Please install Phantom wallet', 'error');
+                }
+            } catch (error) {
+                showStatus('Failed to connect wallet: ' + error.message, 'error');
+            }
+        }
+
+        // Check for existing lock
+        async function checkExistingLock() {
+            try {
+                const seeds = [
+                    createUint8Array([116, 105, 109, 101, 95, 108, 111, 99, 107, 101, 100, 95, 119, 97, 108, 108, 101, 116]), // "time_locked_wallet"
+                    wallet.toBuffer()
+                ];
+                const [pda] = solanaWeb3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
+
+                const accountInfo = await connection.getAccountInfo(pda);
+                if (accountInfo && accountInfo.data.length > 0) {
+                    // Parse account data manually
+                    const data = accountInfo.data;
+                    const amount = Number(new DataView(data.buffer, data.byteOffset + 40, 8).getBigUint64(0, true));
+                    const unlockTimestamp = Number(new DataView(data.buffer, data.byteOffset + 48, 8).getBigInt64(0, true));
+                    
+                    lockData = { amount, unlockTimestamp, pda };
+                    showExistingLock();
+                }
+            } catch (error) {
+                console.log('No existing lock found:', error);
+            }
+        }
+
+        // Show existing lock UI
+        function showExistingLock() {
+            document.getElementById('create-lock-section').style.display = 'none';
+            document.getElementById('existing-lock-section').style.display = 'block';
+            
+            document.getElementById('locked-amount').textContent = (lockData.amount / solanaWeb3.LAMPORTS_PER_SOL).toFixed(4);
+            document.getElementById('unlock-date-display').textContent = new Date(lockData.unlockTimestamp * 1000).toLocaleDateString();
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // Update countdown
+        function updateCountdown() {
+            if (!lockData) return;
+            
+            const now = Math.floor(Date.now() / 1000);
+            const remaining = lockData.unlockTimestamp - now;
+            
+            if (remaining <= 0) {
+                document.getElementById('countdown').textContent = 'UNLOCKED';
+                document.getElementById('withdraw-btn').disabled = false;
+                document.getElementById('withdraw-btn').textContent = 'Withdraw Funds';
+                document.getElementById('withdraw-btn').style.background = 'linear-gradient(45deg, #4caf50, #45a049)';
+            } else {
+                const days = Math.floor(remaining / 86400);
+                const hours = Math.floor((remaining % 86400) / 3600);
+                const minutes = Math.floor((remaining % 3600) / 60);
+                const seconds = remaining % 60;
+                document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+        }
+
+        // Create lock (simplified for testing)
+        async function createLock() {
+            const amount = document.getElementById('amount').value;
+            const unlockDate = document.getElementById('unlock-date').value;
+            
+            if (!amount || !unlockDate) {
+                showStatus('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('create-btn').disabled = true;
+                document.getElementById('create-btn').textContent = 'Creating Lock...';
+
+                // For now, just simulate the creation
+                showStatus('Lock creation would happen here. This is a demo.', 'info');
+                
+                // Simulate lock data
+                const unlockTimestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
+                const amountLamports = parseFloat(amount) * solanaWeb3.LAMPORTS_PER_SOL;
+                
+                lockData = { 
+                    amount: amountLamports, 
+                    unlockTimestamp: unlockTimestamp 
+                };
+                
+                showExistingLock();
+                showStatus('Demo lock created! (This would be real on-chain)', 'success');
+                
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            } finally {
+                document.getElementById('create-btn').disabled = false;
+                document.getElementById('create-btn').textContent = 'Lock Funds';
+            }
+        }
+
+        // Withdraw (simplified for testing)
+        async function withdraw() {
+            if (!lockData) return;
+            
+            try {
+                document.getElementById('withdraw-btn').disabled = true;
+                document.getElementById('withdraw-btn').textContent = 'Processing...';
+                
+                // Simulate withdrawal
+                showStatus('Withdrawal would happen here. Demo complete!', 'success');
+                
+                // Reset UI
+                setTimeout(() => {
+                    lockData = null;
+                    document.getElementById('existing-lock-section').style.display = 'none';
+                    document.getElementById('create-lock-section').style.display = 'block';
+                    document.getElementById('amount').value = '';
+                    document.getElementById('unlock-date').value = '';
+                }, 2000);
+                
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('Time-Locked Wallet Demo Ready');
+        });
+    </script>
+</body>
+</html>
