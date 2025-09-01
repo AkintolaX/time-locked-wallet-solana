@@ -12,7 +12,7 @@ A Solana program that allows users to lock SOL for a specified time period using
 
 ## Program Details
 
-**Program ID (Devnet):** `HXcY4HjwkR1RDsWXNZLJFa8YUYVwryaMY2J8faT6UUtU`
+**Program ID (Devnet):** `JCLD5JBByyLnmndKw6R4iua1Fer8yRfJqp3DGRcVRUd6`
 
 ### Instructions
 
