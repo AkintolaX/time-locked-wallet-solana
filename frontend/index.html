@@ -22,7 +22,6 @@
             position: relative;
         }
 
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -38,7 +37,6 @@
             z-index: -2;
         }
 
-        /* Floating particles */
         .particles {
             position: fixed;
             top: 0;
@@ -83,7 +81,6 @@
             position: relative;
         }
 
-        /* Neon glow effects */
         .neon-box {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid #00ffff;
@@ -374,7 +371,6 @@
             letter-spacing: 1px;
         }
 
-        /* Connect wallet button special styling */
         .connect-btn {
             background: linear-gradient(45deg, #ff0080, #7928ca, #0070f3, #00ffff);
             background-size: 400% 400%;
@@ -404,7 +400,6 @@
             height: 300px;
         }
 
-        /* Wallet address styling */
         #wallet-address {
             font-family: 'Courier New', monospace;
             background: rgba(0, 255, 255, 0.1);
@@ -421,7 +416,6 @@
             50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
         }
 
-        /* Unlock button special effect */
         .unlock-btn {
             background: linear-gradient(45deg, #00ff00, #00ffff, #00ff00) !important;
             animation: unlock-pulse 1s infinite ease-in-out !important;
@@ -439,7 +433,6 @@
             }
         }
 
-        /* Loading animation */
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -455,7 +448,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Hexagon decorative elements */
         .hex-decoration {
             position: absolute;
             width: 50px;
@@ -475,7 +467,6 @@
             100% { transform: rotate(360deg) scale(1); opacity: 0.3; }
         }
 
-        /* Matrix-style text effect for countdown */
         .matrix-countdown {
             font-family: 'Courier New', monospace;
             position: relative;
@@ -499,7 +490,6 @@
             100% { transform: translateY(100%); }
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
@@ -519,7 +509,6 @@
             }
         }
 
-        /* Enhanced hover effects */
         .interactive-element {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -529,7 +518,6 @@
             filter: brightness(1.1);
         }
 
-        /* Glitch effect for locked state */
         .glitch-text {
             animation: glitch 2s infinite;
         }
@@ -559,37 +547,37 @@
             <div id="wallet-section">
                 <div class="neon-box" style="text-align: center;">
                     <h3>Connect to the Matrix</h3>
-                    <p style="margin-bottom: 20px; opacity: 0.8;">Initialize quantum wallet connection</p>
+                    <p style="margin-bottom: 20px; opacity: 0.8;">Initialize Wallet Connection</p>
                     <button onclick="connectWallet()" class="connect-btn interactive-element">
-                        CONNECT PHANTOM WALLET
+                        CONNECT WALLET
                     </button>
                 </div>
             </div>
 
             <div id="app-section" style="display: none;">
                 <div class="wallet-status neon-box interactive-element">
-                    <h3>🔗 NEURAL LINK ESTABLISHED</h3>
+                    <h3>WALLET CONNECTED SUCCESSFULLY/h3>
                     <p style="margin-bottom: 10px; color: #00ff00;">WALLET ADDRESS:</p>
                     <div id="wallet-address"></div>
                 </div>
 
                 <div id="create-lock-section" class="wallet-status neon-box interactive-element">
-                    <h3>TEMPORAL LOCK PROTOCOL</h3>
+                    <h3>LOCK PROTOCOL</h3>
                     <div class="form-group">
-                        <label>💎 CRYPTO AMOUNT (SOL)</label>
+                        <label>CRYPTO AMOUNT (SOL)</label>
                         <input type="number" step="0.01" id="amount" placeholder="0.1" class="interactive-element">
                     </div>
                     <div class="form-group">
-                        <label>TEMPORAL COORDINATES</label>
+                        <label>LOCK PERIOD</label>
                         <input type="datetime-local" id="unlock-date" class="interactive-element">
                     </div>
                     <button onclick="createLock()" id="create-btn" class="interactive-element">
-                        INITIATE QUANTUM LOCK
+                        INITIATE LOCK
                     </button>
                 </div>
 
                 <div id="existing-lock-section" style="display: none;" class="wallet-status neon-box">
-                    <h3>ACTIVE TEMPORAL VAULT</h3>
+                    <h3>ACTIVE VAULT</h3>
                     <div class="stats">
                         <div class="stat interactive-element">
                             <div class="stat-value" id="locked-amount">-</div>
@@ -597,12 +585,12 @@
                         </div>
                         <div class="stat interactive-element">
                             <div class="stat-value" id="unlock-date-display">-</div>
-                            <div class="stat-label">LIBERATION DATE</div>
+                            <div class="stat-label">UNLOCK DATE</div>
                         </div>
                     </div>
                     <div class="countdown matrix-countdown" id="countdown">-</div>
                     <button onclick="withdraw()" id="withdraw-btn" disabled class="glitch-text">
-                        QUANTUM LOCKED
+                        ASSETS LOCKED
                     </button>
                 </div>
 
@@ -624,7 +612,6 @@
                 particle.style.animationDelay = Math.random() * 20 + 's';
                 particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
                 
-                // Random colors
                 const colors = ['#00ffff', '#ff00ff', '#ffff00', '#00ff00'];
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 
@@ -645,7 +632,6 @@
             statusEl.className = `status ${type} interactive-element`;
             statusEl.style.display = 'block';
             
-            // Add sound effect simulation
             if (type === 'success') {
                 statusEl.style.animation = 'slide-in 0.5s ease-out, glow-pulse 2s infinite ease-in-out';
             }
@@ -655,7 +641,7 @@
             return new Uint8Array(data);
         }
 
-        // Connect wallet with enhanced effects
+        // Enhanced effects for connecting wallet
         async function connectWallet() {
             try {
                 const btn = event.target;
@@ -670,7 +656,7 @@
                     document.getElementById('wallet-section').style.display = 'none';
                     document.getElementById('app-section').style.display = 'block';
                     
-                    showStatus('🎉 NEURAL LINK ESTABLISHED! WELCOME TO THE MATRIX', 'success');
+                    showStatus('WALLET CONNECTED SUCCESSFULLY!', 'success');
                     await checkExistingLock();
                 } else {
                     showStatus('❌ PHANTOM WALLET NOT DETECTED - PLEASE INSTALL', 'error');
@@ -684,13 +670,14 @@
         async function checkExistingLock() {
             try {
                 const seeds = [
-                    createUint8Array([116, 105, 109, 101, 95, 108, 111, 99, 107, 101, 100, 95, 119, 97, 108, 108, 101, 116]),
+                    new TextEncoder().encode("time_locked_wallet"),
                     wallet.toBuffer()
                 ];
                 const [pda] = solanaWeb3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
 
                 const accountInfo = await connection.getAccountInfo(pda);
                 if (accountInfo && accountInfo.data.length > 0) {
+                    
                     const data = accountInfo.data;
                     const amount = Number(new DataView(data.buffer, data.byteOffset + 40, 8).getBigUint64(0, true));
                     const unlockTimestamp = Number(new DataView(data.buffer, data.byteOffset + 48, 8).getBigInt64(0, true));
@@ -699,11 +686,11 @@
                     showExistingLock();
                 }
             } catch (error) {
-                console.log('No existing lock found:', error);
+                console.log('No existing lock found or error:', error);
             }
         }
 
-        // Show existing lock UI with enhanced effects
+        // Enhanced effects for lock UI
         function showExistingLock() {
             document.getElementById('create-lock-section').style.display = 'none';
             document.getElementById('existing-lock-section').style.display = 'block';
@@ -723,10 +710,10 @@
             const remaining = lockData.unlockTimestamp - now;
             
             if (remaining <= 0) {
-                document.getElementById('countdown').innerHTML = '🔓 <span style="color: #00ff00;">UNLOCKED</span> 🔓';
+                document.getElementById('countdown').innerHTML = '<span style="color: #00ff00;">UNLOCKED</span> 🔓';
                 const withdrawBtn = document.getElementById('withdraw-btn');
                 withdrawBtn.disabled = false;
-                withdrawBtn.textContent = 'EXTRACT QUANTUM ASSETS';
+                withdrawBtn.textContent = 'EXTRACT ASSETS';
                 withdrawBtn.className = 'unlock-btn';
                 withdrawBtn.style.animation = 'unlock-pulse 1s infinite ease-in-out';
             } else {
@@ -743,88 +730,142 @@
             }
         }
 
-        // Create lock with enhanced effects
-        async function createLock() {
-            const amount = document.getElementById('amount').value;
-            const unlockDate = document.getElementById('unlock-date').value;
-            
-            if (!amount || !unlockDate) {
-                showStatus('⚠️ TEMPORAL COORDINATES INCOMPLETE', 'error');
-                return;
-            }
+       async function createLock() {
+    const amount = document.getElementById('amount').value;
+    const unlockDate = document.getElementById('unlock-date').value;
+    
+    if (!amount || !unlockDate) {
+        showStatus('LOCK PERIOD DETAILS INCOMPLETE', 'error');
+        return;
+    }
 
-            try {
-                const btn = document.getElementById('create-btn');
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span>QUANTUM ENCRYPTION IN PROGRESS...';
+    try {
+        const btn = document.getElementById('create-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>ENCRYPTION IN PROGRESS...';
 
-                showStatus('🔮 INITIATING TEMPORAL LOCK SEQUENCE...', 'info');
-                
-                // Simulate lock creation with delay for effect
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                const unlockTimestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
-                const amountLamports = parseFloat(amount) * solanaWeb3.LAMPORTS_PER_SOL;
-                
-                lockData = { 
-                    amount: amountLamports, 
-                    unlockTimestamp: unlockTimestamp 
-                };
-                
-                showExistingLock();
-                showStatus('VAULT SUCCESSFULLY CREATED! ASSETS SECURED IN THE TEMPORAL MATRIX', 'success');
-                
-            } catch (error) {
-                showStatus('🚨 QUANTUM ENCRYPTION FAILED: ' + error.message, 'error');
-            } finally {
-                const btn = document.getElementById('create-btn');
-                btn.disabled = false;
-                btn.textContent = 'INITIATE LOCK';
-            }
-        }
+        showStatus('INITIATING LOCK SEQUENCE...', 'info');
+        
+        const amountLamports = parseFloat(amount) * solanaWeb3.LAMPORTS_PER_SOL;
+        const unlockTimestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
+        
+        const seeds = [
+            new TextEncoder().encode("time_locked_wallet"),
+            wallet.toBuffer()
+        ];
+        const [pda] = solanaWeb3.PublicKey.findProgramAddressSync(seeds, PROGRAM_ID);
+        
+        const instructionData = new Uint8Array(24);
+        const discriminator = [182, 214, 195, 105, 58, 73, 81, 124]; // initialize_lock discriminator
+        instructionData.set(discriminator, 0);
+        
+        const amountBytes = new ArrayBuffer(8);
+        new DataView(amountBytes).setBigUint64(0, BigInt(amountLamports), true);
+        instructionData.set(new Uint8Array(amountBytes), 8);
+        
+        const timestampBytes = new ArrayBuffer(8);
+        new DataView(timestampBytes).setBigInt64(0, BigInt(unlockTimestamp), true);
+        instructionData.set(new Uint8Array(timestampBytes), 16);
+        
+        const { blockhash } = await connection.getLatestBlockhash();
+        
+        const transaction = new solanaWeb3.Transaction({
+            recentBlockhash: blockhash,
+            feePayer: wallet
+        }).add(
+            new solanaWeb3.TransactionInstruction({
+                keys: [
+                    { pubkey: wallet, isSigner: true, isWritable: true },
+                    { pubkey: pda, isSigner: false, isWritable: true },
+                    { pubkey: solanaWeb3.SystemProgram.programId, isSigner: false, isWritable: false },
+                ],
+                programId: PROGRAM_ID,
+                data: instructionData,
+            })
+        );
+        
+        const signature = await window.solana.signAndSendTransaction(transaction);
+        await connection.confirmTransaction(signature.signature);
+        
+        lockData = { 
+            amount: amountLamports, 
+            unlockTimestamp: unlockTimestamp,
+            pda: pda
+        };
+        
+        showExistingLock();
+        showStatus('VAULT SUCCESSFULLY CREATED! TRANSACTION: ' + signature.signature.slice(0, 8) + '...', 'success');
+        
+    } catch (error) {
+        showStatus('ENCRYPTION FAILED: ' + error.message, 'error');
+        console.error('Transaction error:', error);
+    } finally {
+        const btn = document.getElementById('create-btn');
+        btn.disabled = false;
+        btn.textContent = 'INITIATE LOCK';
+    }
+}
 
-        // Withdraw with enhanced effects
         async function withdraw() {
-            if (!lockData) return;
-            
-            try {
-                const btn = document.getElementById('withdraw-btn');
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span>EXTRACTING QUANTUM ASSETS...';
-                
-                showStatus('TEMPORAL VAULT UNLOCKING... PREPARING ASSET EXTRACTION...', 'info');
-                
-                // Simulate withdrawal with enhanced delay
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                
-                showStatus('QUANTUM EXTRACTION COMPLETE! ASSETS SUCCESSFULLY LIBERATED!', 'success');
-                
-                // Reset UI with dramatic effect
-                setTimeout(() => {
-                    lockData = null;
-                    document.getElementById('existing-lock-section').style.display = 'none';
-                    document.getElementById('create-lock-section').style.display = 'block';
-                    document.getElementById('amount').value = '';
-                    document.getElementById('unlock-date').value = '';
-                    showStatus('QUANTUM SYSTEM RESET - READY FOR NEW TEMPORAL LOCK', 'info');
-                }, 3000);
-                
-            } catch (error) {
-                showStatus('🚨 EXTRACTION PROTOCOL FAILED: ' + error.message, 'error');
-                document.getElementById('withdraw-btn').disabled = false;
-                document.getElementById('withdraw-btn').textContent = 'EXTRACT QUANTUM ASSETS';
-            }
-        }
+    if (!lockData) return;
+    
+    try {
+        const btn = document.getElementById('withdraw-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>EXTRACTING QUANTUM ASSETS...';
+        
+        showStatus('VAULT UNLOCKING... PREPARING ASSET EXTRACTION...', 'info');
+        
+        // Get recent blockhash
+        const { blockhash } = await connection.getLatestBlockhash();
+        
+        const instructionData = new Uint8Array(8);
+        const withdrawDiscriminator = [183, 18, 70, 156, 148, 109, 161, 34]; // withdraw discriminator
+        instructionData.set(withdrawDiscriminator, 0);
+        
+        const transaction = new solanaWeb3.Transaction({
+            recentBlockhash: blockhash,
+            feePayer: wallet
+        }).add(
+            new solanaWeb3.TransactionInstruction({
+                keys: [
+                    { pubkey: wallet, isSigner: true, isWritable: true },
+                    { pubkey: lockData.pda, isSigner: false, isWritable: true },
+                ],
+                programId: PROGRAM_ID,
+                data: instructionData,
+            })
+        );
+        
+        const signature = await window.solana.signAndSendTransaction(transaction);
+        await connection.confirmTransaction(signature.signature);
+        
+        showStatus('EXTRACTION COMPLETE! ASSETS SUCCESSFULLY UNLOCKED! TX: ' + signature.signature.slice(0, 8) + '...', 'success');
+        
+        setTimeout(() => {
+            lockData = null;
+            document.getElementById('existing-lock-section').style.display = 'none';
+            document.getElementById('create-lock-section').style.display = 'block';
+            document.getElementById('amount').value = '';
+            document.getElementById('unlock-date').value = '';
+            showStatus('SYSTEM RESET - READY FOR NEW LOCK', 'info');
+        }, 3000);
+        
+    } catch (error) {
+        showStatus('EXTRACTION FAILED: ' + error.message, 'error');
+        document.getElementById('withdraw-btn').disabled = false;
+        document.getElementById('withdraw-btn').textContent = 'EXTRACT ASSETS';
+    }
+}
 
-        // Enhanced initialization
         window.addEventListener('load', () => {
-            console.log('Time-Locked Quantum Vault Interface Online');
+            console.log('Time-Locked Vault Interface Online');
             createParticles();
             
-            // Add some interactive sound effects (visual feedback)
+            // Interactive sound effects
             document.addEventListener('click', (e) => {
                 if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
-                    // Create ripple effect
+                    // Ripple effect
                     const ripple = document.createElement('div');
                     ripple.style.position = 'absolute';
                     ripple.style.borderRadius = '50%';
@@ -849,7 +890,7 @@
             });
         });
 
-        // Add ripple animation
+        // Ripple animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes ripple {
