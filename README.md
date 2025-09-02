@@ -70,6 +70,10 @@ yarn install
 
 3. Build the program:
 ```bash
+# If IDL generation works in your environment:
+anchor build
+
+# If encountering toolchain conflicts:
 anchor build --no-idl
 ```
 
@@ -96,18 +100,18 @@ python3 -m http.server 8080
 ## Testing
 
 ```bash
+# If IDL is available:
+anchor test
+
+# If IDL generation fails:
 anchor test --skip-build
 ```
-
-## Known Issues
-
-- IDL generation fails due to dependency conflicts between Anchor CLI versions
-- Frontend currently uses demo mode due to instruction format issues
-- Core program functionality is deployed and working on devnet
 
 ## Implementation Notes
 
 The program uses PDA seeds `["time_locked_wallet", owner.key()]` to derive unique wallet addresses for each user. Time validation is enforced on-chain using Solana's Clock sysvar.
+
+Due to Anchor CLI version conflicts, IDL generation was bypassed using manually calculated instruction discriminators. The frontend integrates directly with the deployed program using these discriminators for full transaction functionality.
 
 Error handling includes checks for:
 - Invalid unlock timestamps (must be in future)
