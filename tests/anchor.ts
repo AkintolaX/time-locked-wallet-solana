@@ -3,7 +3,6 @@ import * as web3 from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
 
 describe("time-locked-wallet", () => {
-  // Configure the client to use the local cluster
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
   const program = anchor.workspace.TimeLockedWallet;
@@ -29,7 +28,6 @@ describe("time-locked-wallet", () => {
 
       const account = await program.account.timeLockedWallet.fetch(timeLockedWalletPda);
       
-      // Simple assertions without chai
       if (account.amount.toString() !== amount.toString()) {
         throw new Error(`Amount mismatch: expected ${amount.toString()}, got ${account.amount.toString()}`);
       }
